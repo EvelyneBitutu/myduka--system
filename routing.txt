@@ -1,0 +1,319 @@
+#flask
+#what is flask?- microframework used to build applications
+#what is a framenwork? and examples.
+-framework - is a software we use to build applications e.g
+  flask, Django,FastAPI-pythom Frameworks
+  .NET-C#
+   Spring-Java
+   Ruby on Ruby Rails-RubyWe use frameworks on top of languages-comes with ready made
+   for you to build your application
+#what is a library and examples
+ -pre written code that helps you splve specific problems, or adds certain features 
+ to your code.
+ # think of concept of building a house
+
+ #option 1 (library)-within my control(is like a store e.g )
+  - identify a land, identify the materials, go to hardware buy all materials, design the house himsel,
+     build the house himself
+     the programmer is in control of usage with a library
+
+#option two(framework)
+- he could go to a architech and engineer and get a predesigned house (blueprint)and  with all
+all tools and materials already identified and provided
+the framework is structured hence the programmer has to follow certain convetions 
+and pratices to achieve the intended goal
+
+
+#difference between a framework and a library?
+
+#routing- is a mechanism to map URLS to functions-
+--system for resource navigation
+
+# what is a route?
+#definition- part of the URL that determines what function to execute
+             when a specific url is accessed or visited
+
+             www.myduka.com-url
+             www.myduka/products.com
+             techcamp.co.ke
+             techcamp.co.ke/about_us
+
+# how do we implement this in flask framework?
+
+@app.route()- its called a decorator function-has a prefex-'@'
+
+@app.route (*/products)
+def products():
+    products=fetch_data('products')
+    return products
+     
+# parameters we can pass in a route function
+#1. Rule-e.g / /products,/sales,/users - defines a path 
+    # a User accesses in the browser
+
+We've been returning strings -one step forward
+#return a simple html page (home page)
+
+
+                MYDUKA Project Structure
+my duka-nfolder containing your entire project
+    -main.py
+    -database.py
+    -templates-casing,syntax
+    (all html file MUST be here inside)
+        -index.html
+        -sales.html
+        -products.html
+    -static(contains all static files- file that don't change much
+        -styling-myduka css, styles.css
+        - Images
+        - Js files
+        - Favicon
+        - Fonts, pdf files,)
+
+# rendering- process of serving html with flask
+goal: display a html page/file using flask
+#implement
+- we render html page using fucntions provided by flaskr 
+render_template()- this function:
+
+1. has to be imported  from Flask in order to be used
+2. takes some parameters-(name of your html page)
+    e.g render_template('index.html')
+    2. variables holding data
+
+
+#iplementing passing data from flask to html
+- to implement this we still have to use tools provided by Flask
+#tool- is called jinja
+- what is jinja?- jinja is templating engine intergrated  with Flak to render dynamic HTML pages
+-dynammic- it {can take some data and this data changes depending on user input}
+templating engine - is a tool in web development used to generate dynamic HTML
+# WHAT CAN JINJA DO?
+jinja helps you pass/perform Python logic inside HTML templates.
+
+#How does jinja work?
+- you already have predefined templates
+-passing jinja syntax inside these templates
+- your flask application provided data to be passed inside jinja
+-data is rendered
+
+what can we pass  inside jinja?
+1. simple variables once yo've passed this variable as
+ parameter inside render_template
+ -pass that variable inside jinja
+ -syntax {{variable}}
+
+Jinja is syntax-programmer writes Jinja
+to pass a variable using Jinja write the correct variable name
+inside two curlys-{{}}
+
+e.g name="Jon Doe"
+
+return render_teplate("index.html", name=name)
+
+inside your html(template)
+<p>Hello{{name}}</p>
+
+2. control structures
+-sequence- thsi means your program is being executed sequentially
+            - from top to bottom
+- Selection- conditional statements-if\else, switch\break
+-iteration-looping- executing  instructions or code until
+        a specified condition is men-for , while, do-while
+
+# impplementing control structures with jinja
+
+-{% %}
+take note:- you have to end the program 
+- you have to define a starting point anf an ending point
+
+# focus on if statements and loops
+
+if conditional statements-if 
+x=5
+if x<10:
+print("less than 10")
+
+else:
+print ("larger than 10")
+
+we want to see our data  from the db in our browaers
+1. we're going to display raw from our data
+2. once we can do that-display it in much more organized manner(tables)
+
+
+import the function that fetches data you want to view
+-declare a variable inside aroute to call that function
+-declare a second variable to data to be passed in JINJA
+
+# Posting data
+#what is posting?- sending data from  a client to a server(Flask)
+                    for processing
+    -Client (web,browser, mobile app)- the entity that sends requests
+
+#Data follow
+- a user will visit route
+- user fill outs a form and submits it
+-take note of form action and method(HTTP Method)
+    -action is route mapping the URL to a funtion (specifying)
+    e.g /products,/sales
+    method-http method.-are ways of telling Flask/server what to do with resources
+    e.g GET,POST,PUT, DELETE
+
+    GET- getting  or fetching a resource
+    POST-sends data to a server
+    PUT- updates a resource
+    DELETE-delete/ get rid of a resource
+
+data is sent to flask for processing-
+-from the action specified Flask will look for 
+a function to execute-in that route- the 
+- Flask will extract data from the form using a request object, validates it and saves it
+user will be redirected back to page.
+
+
+
+
+
+#posting sales with Flask
+
+Flask implementation is same with products implementation
+sales table has a foreigh key
+in our sales from:
+    - select dropdown having our products (loop through products)
+    - pick the pid from and name from the iteration
+    - quantity
+
+Dashboard Data- profit_per_product
+                -profit per day
+                sales per product
+                sales per day
+
+1. Profit per product
+select products.name, sum((products.selling_price- products.buying_price)*quantity) as profit from 
+products join sales on products.id=sales.pid group by(products.name);
+
+2.  profit per day
+"select date.created_at, sum((products.selling_price-products.buying_price)*quantity) as profit from 
+products join sales on products.id=sales.pid group by(sales.created_at);
+
+3. sales per product
+select products.name, sum(products.selling_price*sales.quantity) as revenue from products join sales on 
+products.id=sales.pid group by(products.name);
+
+4. sales per day
+select date.created_at, sum(products.selling_price*sales.quantity) as revenue from sales join products on 
+products.id=sales.pid group by(sales.created_at);
+
+Goal:Visualize our data using charts
+Well use charting libraries and implementing our chartsin a script
+
+1. Bar chart
+2. Line Chart- visualize any data with a time frame e.g date
+                -   profit and sales per day
+        1. cdn link- content delivery content
+        2. canvas- where to palce your chart in html- is a elemnt/ templating
+        script will know what canvas to place the chart in using and id-atttribute
+
+
+test.py
+for i in range(11):
+print (i)
+
+numbers=[i for i in range(11)]
+print(numbers)
+
+
+N/B= JS does not recognize Decimal 
+    - its called float
+
+safe-
+
+
+proofit and sales per day
+y- axix- profit and sales
+        - how your profit compares to sales in relation to database
+
+you can fetch date fron either profit per day or sales per day
+- both are a list of tuples
+    - each of this tuples has date metric as the first index- date metric is the same both sales and profit
+    - get that date from sales per day using list comprehension
+    and get that date metric using indexes- date- -index 0-[0]
+
+
+
+    home 
+    products
+    sales
+    Dashboard
+
+    - have a navbar that can navigate to all pages- a footer
+    styled and descriptive home page giving info about that sofware/project/POS
+    products- modal to add product, products table
+    sales- modal with form containing a dropdown to select product, table fro sales
+    dashboard- 2 charts along with other relevant info 
+    style them completely
+    - datatable- to m
+
+Template Inheritance- functionality that allows you create a base template
+which contains coomn webpage elements like ;
+navbar,footers, headers
+
+create a base.html iside template folder
+have common features in this base.html, navigation, headers
+have the other templates inherit from base
+
+
+user registration
+users table
+
+create table users(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR (255) NOT NULL,
+    email VARCHAR (255)UNIQUE NOT NULL,
+    phone_number VARCHAR (100) NOT NULL,
+    password VARCHAR(255) not null
+);
+
+register route-main.py
+
+1. taking user input from a a register form
+2. check all inputs are fiiled correctly
+3. user posts their info
+        - method post defined in the form and route
+       - getting form data
+        -request object- request.method- tells server what to do with data
+                - request object- request.form- gets user input posted from a form
+                -password hashing-
+                converts plain text into form
+                that cant be easily undertood- encoding
+                -crypting for security purposes
+                -bcrypt
+                        - pip install flask
+
+
+4. check if user exists
+            -if users exists- select a user using that email
+            - let the user know they're already registred 
+            and tell them to login instead(flash messaging)
+
+            else
+                - add user
+                - redirect to login
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

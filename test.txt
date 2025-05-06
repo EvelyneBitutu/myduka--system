@@ -1,0 +1,7 @@
+# name=""
+# if name:#if name exist
+#     print(name) 
+# else:
+#     print "name not provided"
+
+# numbers=[1,2,2,2,]
